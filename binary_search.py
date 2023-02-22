@@ -38,12 +38,12 @@ def find_smallest_positive(xs):
                 return None
         center = (left + right) //2
         
-        if xs[mid] > 0:
-            right = mid
-        if xs[mid] <= 0:
-            left = mid + 1
-        if xs[mid] == 1:
-            return mid
+        if xs[center] > 0:
+            right = center
+        if xs[center] <= 0:
+            left = center + 1
+        if xs[center] == 1:
+            return center
         return helper(left, right)
 
     return help(0, len(xs)-1)
@@ -151,10 +151,10 @@ def argmin(f, lo, hi, epsilon=1e-3):
         b = (left + 2 * right) / 3
 
         result = [f(left), f(a), f(b), f(right)]
-        if f(left) == min(image) or f(m1) == min(image):
-            return go(left, m2)
-        if f(m2) == min(image) or f(right) == min(image):
-            return go(m1, right)
+        if f(left) == min(result) or f(a) == min(result):
+            return helper(left, b)
+        if f(m2) == min(result) or f(right) == min(result):
+            return helper(a, right)
 
     return helper(lo, hi)
 
