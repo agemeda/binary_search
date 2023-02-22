@@ -1,4 +1,4 @@
-# Binary Search 
+#Binary Search 
 [![](https://github.com/agemeda/binary_search/workflows/tests/badge.svg)](https://github.com/agemeda/binary_search/actions?query=workflow%3Atests)
 [![](https://github.com/agemeda/binary_search/workflows/extra_credit/badge.svg)](https://github.com/agemeda/binary_search/actions?query=workflow%3Atests)
 
