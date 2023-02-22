@@ -1,10 +1,12 @@
 #!/bin/python3
 '''
-JOKE: There are 2 hard problems in computer science: cache invalidation, naming things, and off-by-1 errors.
+JOKE: There are 2 hard problems in computer science:
+cache invalidation, naming things, and off-by-1 errors.
 
 It's really easy to have off-by-1 errors in these problems.
 Pay very close attention to your list indexes and your < vs <= operators.
 '''
+
 
 def find_smallest_positive(xs):
     '''
@@ -12,7 +14,7 @@ def find_smallest_positive(xs):
     Find the index of the smallest positive number.
     If no such index exists, return `None`.
 
-    HINT: 
+    HINT:
     This is essentially the binary search algorithm from class,
     but you're always searching for 0.
 
@@ -36,8 +38,7 @@ def find_smallest_positive(xs):
                 return left
             else:
                 return None
-        center = (left + right) //2
-        
+        center = (left + right) // 2
         if xs[center] > 0:
             right = center
         if xs[center] <= 0:
@@ -49,14 +50,13 @@ def find_smallest_positive(xs):
     return help(0, len(xs)-1)
 
 
-
 def count_repeats(xs, x):
     '''
     Assume that xs is a list of numbers sorted from HIGHEST to LOWEST,
     and that x is a number.
     Calculate the number of times that x occurs in xs.
 
-    HINT: 
+    HINT:
     Use the following three step procedure:
         1) use binary search to find the lowest index with a value >= x
         2) use binary search to find the lowest index with a value < x
@@ -74,7 +74,6 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
-    
     if len(xs) == 0:
         return 0
 
@@ -91,7 +90,7 @@ def count_repeats(xs, x):
             left = mid + 1
         if xs[mid] <= x:
             right = mid
-        return find_high(left, right)
+        return max_helper(left, right)
 
     def min_helper(left, right):
         if right == left:
@@ -106,14 +105,16 @@ def count_repeats(xs, x):
             right = mid
         return min_helper(left, right)
 
-    return min_helper(0, len(xs) - 1) - max_helper(0, len(xs) - 1) 
+    return min_helper(0, len(xs) - 1) - max_helper(0, len(xs) - 1)
 
 
 def argmin(f, lo, hi, epsilon=1e-3):
     '''
-    Assumes that f is an input function that takes a float as input and returns a float with a unique global minimum,
+    Assumes that f is an input function that takes a
+    float as input and returns a float with a unique global minimum,
     and that lo and hi are both floats satisfying lo < hi.
-    Returns a number that is within epsilon of the value that minimizes f(x) over the interval [lo,hi]
+    Returns a number that is within epsi
+    lon of the value that minimizes f(x) over the interval [lo,hi]
 
     HINT:
     The basic algorithm is:
@@ -121,20 +122,27 @@ def argmin(f, lo, hi, epsilon=1e-3):
         2) For each recursive call:
             a) select two points m1 and m2 that are between lo and hi
             b) one of the 4 points (lo,m1,m2,hi) must be the smallest;
-               depending on which one is the smallest, 
-               you recursively call your function on the interval [lo,m2] or [m1,hi]
+               depending on which one is the smallest,
+               you recursively call your function
+               on the interval [lo,m2] or [m1,hi]
 
     APPLICATION:
-    Essentially all data mining algorithms are just this argmin implementation in disguise.
+    Essentially all data mining algorithms
+    are just this argmin implementation in disguise.
     If you go on to take the data mining class (CS145/MATH166),
-    we will spend a lot of time talking about different f functions that can be minimized and their applications.
-    But the actual minimization code will all be a variant of this binary search.
+    we will spend a lot of time talking about
+    different f functions that can be minimized and their applications.
+    But the actual minimization code
+    will all be a variant of this binary search.
 
     WARNING:
     The doctests below are not intended to pass on your code,
-    and are only given so that you have an example of what the output should look like.
-    Your output numbers are likely to be slightly different due to minor implementation details.
-    Writing tests for code that uses floating point numbers is notoriously difficult.
+    and are only given so that you have
+    an example of what the output should look like.
+    Your output numbers are likely to be slightly
+    different due to minor implementation details.
+    Writing tests for code that uses floating point
+    numbers is notoriously difficult.
     See the pytests for correct examples.
 
     >>> argmin(lambda x: (x-5)**2, -20, 20)
@@ -144,28 +152,30 @@ def argmin(f, lo, hi, epsilon=1e-3):
     '''
 
     def helper(left, right):
-        if right - left < x:
+        if right - left < epsilon:
             return right
 
-        a = (2 * left + right) / 3
-        b = (left + 2 * right) / 3
+        m1 = (2 * left + right) / 3
+        m2 = (left + 2 * right) / 3
 
-        result = [f(left), f(a), f(b), f(right)]
-        if f(left) == min(result) or f(a) == min(result):
-            return helper(left, b)
-        if f(m2) == min(result) or f(right) == min(result):
-            return helper(a, right)
+        result = [f(left), f(m1), f(m2), f(right)]
+        if f(left) == min(result) or f(m1) == min(result):
+            return helper(left, m2)
+        if f(m1) == min(result) or f(right) == min(result):
+            return helper(m1, right)
 
     return helper(lo, hi)
 
-################################################################################
+###########################
 # the functions below are extra credit
-################################################################################
+###########################
+
 
 def find_boundaries(f):
     '''
     Returns a tuple (lo,hi).
-    If f is a convex function, then the minimum is guaranteed to be between lo and hi.
+    If f is a convex function, then
+    the minimum is guaranteed to be between lo and hi.
     This function is useful for initializing argmin.
 
     HINT:
@@ -179,10 +189,21 @@ def find_boundaries(f):
         you're done; return lo,hi
     '''
 
+    def help(lo, hi):
+        mid = (lo + hi) / 2
+        if f(lo) < f(mid):
+            return help(2 * lo, hi)
+        elif f(hi) < f(mid):
+            return help(lo, 2 * hi)
+        else:
+            return (lo, hi)
+    return help(-1, 1)
+
 
 def argmin_simple(f, epsilon=1e-3):
     '''
-    This function is like argmin, but it internally uses the find_boundaries function so that
+    This function is like argmin, but it
+    internally uses the find_boundaries function so that
     you do not need to specify lo and hi.
 
     NOTE:
