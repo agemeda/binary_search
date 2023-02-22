@@ -27,6 +27,28 @@ def find_smallest_positive(xs):
     True
     '''
 
+    if len(xs) == 0:
+        return None
+
+    def helper(left, right):
+        if left == right:
+            if xs[left] > 0:
+                return left
+            else:
+                return None
+        center = (left + right) //2
+        
+        if xs[mid] > 0:
+            right = mid
+        if xs[mid] <= 0:
+            left = mid + 1
+        if xs[mid] == 1:
+            return mid
+        return helper(left, right)
+
+    return help(0, len(xs)-1)
+
+
 
 def count_repeats(xs, x):
     '''
@@ -52,6 +74,39 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
+    
+    if len(xs) == 0:
+        return 0
+
+    def max_helper(left, right):
+        if right == left:
+            if right == len(xs) - 1 and xs[right] > x:
+                return len(xs)
+            if xs[right] >= x:
+                return right
+            else:
+                return 0
+        mid = (left + right) // 2
+        if xs[mid] > x:
+            left = mid + 1
+        if xs[mid] <= x:
+            right = mid
+        return find_high(left, right)
+
+    def min_helper(left, right):
+        if right == left:
+            if xs[right] < x:
+                return right
+            else:
+                return len(xs)
+        mid = (left + right) // 2
+        if xs[mid] >= x:
+            left = mid + 1
+        if xs[mid] < x:
+            right = mid
+        return find_low(left, right)
+
+    return min_helper(0, len(xs) - 1) - max_helper(0, len(xs) - 1) 
 
 
 def argmin(f, lo, hi, epsilon=1e-3):
@@ -88,6 +143,20 @@ def argmin(f, lo, hi, epsilon=1e-3):
     -0.00016935087808430278
     '''
 
+    def helper(left, right):
+        if right - left < x:
+            return right
+
+        a = (2 * left + right) / 3
+        b = (left + 2 * right) / 3
+
+        result = [f(left), f(a), f(b), f(right)]
+        if f(left) == min(image) or f(m1) == min(image):
+            return go(left, m2)
+        if f(m2) == min(image) or f(right) == min(image):
+            return go(m1, right)
+
+    return helper(lo, hi)
 
 ################################################################################
 # the functions below are extra credit
