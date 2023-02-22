@@ -104,7 +104,7 @@ def count_repeats(xs, x):
             left = mid + 1
         if xs[mid] < x:
             right = mid
-        return find_low(left, right)
+        return min_helper(left, right)
 
     return min_helper(0, len(xs) - 1) - max_helper(0, len(xs) - 1) 
 
