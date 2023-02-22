@@ -29,7 +29,7 @@ def find_smallest_positive(xs):
     True
     '''
 
-    if len(xs) == 0:
+    if not xs:
         return None
 
     def help(left, right):
@@ -47,8 +47,7 @@ def find_smallest_positive(xs):
             return mid + 1
             left = mid + 1
         return help(left, right)
-
-    return help(0, len(xs)-1)
+    return help(0, len(xs) - 1)
 
 
 def count_repeats(xs, x):
@@ -75,39 +74,56 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
-    if len(xs) == 0:
+
+    if not xs:
         return 0
 
-    def max_helper(left, right):
-
-        if right == left:
-            if right == len(xs) - 1 and xs[right] > x:
-                return len(xs)
-            if xs[right] >= x:
-                return right
+    def helperfunction1(left, right):
+        result1 = None
+        if left == right:
+            if xs[left] == x:
+                return left
             else:
                 return None
         mid = (left + right) // 2
-        if xs[mid] > x:
-            left = mid + 1
-        if xs[mid] <= x:
-            right = mid
-        return max_helper(left, right)
-
-    def min_helper(left, right):
-        if right == left:
-            if xs[right] < x:
-                return right
+        if xs[mid] == x:
+            result1 = mid
+            if xs[mid - 1] == x and mid != 0:
+                right = mid - 1
             else:
-                return len(xs)
-        mid = (left + right) // 2
-        if xs[mid] >= x:
+                return result1
+        elif xs[mid] > x:
             left = mid + 1
-        if xs[mid] < x:
-            right = mid
-        return min_helper(left, right)
+        else:
+            right = mid - 1
+        return helperfunction1(left, right)
+    h1 = helperfunction1(0, len(xs) - 1)
 
-    return min_helper(0, len(xs) - 1) - max_helper(0, len(xs) - 1)
+    def helperfunction2(left, right):
+        result2 = None
+        if left == right:
+            if xs[left] == x:
+                return left
+            else:
+                return None
+        mid = (left + right) // 2
+        if xs[mid] == x:
+            result2 = mid
+            if xs[mid + 1] == x and ((mid + 1) < len(xs)):
+                left = mid + 1
+            else:
+                return result2
+        elif xs[mid] > x:
+            left = mid + 1
+        else:
+            right = mid - 1
+        return helperfunction2(left, right)
+    h2 = helperfunction2(0, len(xs) - 1)
+
+    if h1 is not None and h2 is not None:
+        return (h2 - h1) + 1
+    else:
+        return 0
 
 
 def argmin(f, lo, hi, epsilon=1e-3):
