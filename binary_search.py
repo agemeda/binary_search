@@ -161,7 +161,7 @@ def argmin(f, lo, hi, epsilon=1e-3):
         result = [f(left), f(m1), f(m2), f(right)]
         if f(left) == min(result) or f(m1) == min(result):
             return helper(left, m2)
-        if f(m1) == min(result) or f(right) == min(result):
+        if f(m2) == min(result) or f(right) == min(result):
             return helper(m1, right)
 
     return helper(lo, hi)
